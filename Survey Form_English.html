@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Safer Area Survey</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /*justify-content: space-between;*/
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Noto Sans', sans-serif;
+        }
+
+        #mainQuestion {
+            font-size: 40px;
+            margin-top: 15px;
+            color: rgb(46,125,50);
+            font-weight: bold;
+            text-align: center;
+            z-index: 2;
+            
+        }
+
+        .background-line {
+            position: relative;
+            transform: translateY(-45px);
+            width: 60vw;
+            height: 50px;
+            background-color: rgb(235,235,235);
+            z-index: 1;
+            border-radius: 50px;
+        }
+
+        #mainInstruction {
+            font-size: 14px;
+            margin-bottom: 0px;
+            color: rgb(97,97,97);
+            text-align: center;
+            transform: translateY(-30px);
+        }
+
+        #selectedGenderMessage {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: rgb(97,97,97)
+
+        }
+
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            transform: translateY(-20px);
+
+        }
+
+        img {
+            height: auto;
+            margin: 5px;
+            justify-content: center;
+        }
+        
+        img.clicked {
+            outline: 10px solid green;
+        }
+        
+        
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .form-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+    
+        /* Dropdown question */
+        label {
+          color: rgb(97,97,97);
+          font-size: 14px;
+          margin-bottom: 10px;
+          margin-top: 10px;
+        }
+        
+        /* Dropdown placeholder */
+        select {
+          color: rgb(97,97,97);
+          font-size: 12px;
+          padding: 5px;
+          width: 200px;
+          background-color: rgb(238,238,238);
+          border: none;
+          border-radius: 25px;
+        }
+        
+        /* Dropdown options */
+        option {
+          color: rgb(97,97,97);
+          font-size: 14px;
+          background-color: white;
+        }
+
+        #footerText {
+            text-align: center;
+            padding: 10px;
+            font-size: 10px;
+            margin-bottom: 0px;
+            margin-top: 15px;
+            color: rgb(97,97,97);
+            line-height: 160%;
+        }
+        
+         /* Modal styles */
+        .modal {
+            display: block;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            background-color: rgba(0, 0, 0, 0.6);
+
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            text-align: center;
+            line-height: 160%;
+            border-radius: 15px;
+
+        }
+
+        .row {
+
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+    
+        #modalButton {
+            background-color: rgb(235,235,235);
+            border: none;
+            color: rgb(97,97,97);
+            font-weight: bold;
+            padding: 10px;
+            width: 200px;
+            height: 50px;
+            border-radius: 25px; 
+            vertical-align: middle; 
+            text-decoration: none;
+            font-size: 16px;          
+        }
+
+        #modalButton:hover{
+            cursor: pointer; 
+            background-color: rgb(165,214,167);
+        }
+
+
+        @media (max-width: 750px) {
+        
+            #mainQuestion {
+                font-size: 24px;
+                margin-top: 25px;
+            }
+
+            .background-line {
+                transform: translateY(-30px);
+                width: 94vw;
+                height: 34px;
+            }
+
+            .row {
+                flex-wrap: wrap;
+                justify-content: center;
+                min-width: 75%;
+            }
+
+            #mainInstruction {
+                transform: translateY(-10px);
+            }        
+
+            .image-container {
+                flex-direction: column;
+                justify-content: center;
+                transform: translateY(+10px);
+            }
+
+            img {
+                   object-fit: contain;
+                   justify-content: center;
+            }
+
+            #selectedGenderMessage {
+                margin-top: 30px;
+
+            }
+
+
+            .form-container {
+                flex-direction: column;
+
+            }
+              
+            .form-item {
+                margin: 0px;
+            }
+
+            .form-item label {
+              margin-bottom: 3px;
+              margin-top: 15px;
+            }
+
+              #footerText {
+                margin-top: 25px;
+            }
+
+        }
+        
+    </style>
+</head>
+<body>
+
+	<div id="mainQuestion">Which area seems comparatively safe?</div>
+
+    <div class="background-line"></div>
+
+    <div id="mainInstruction">Please click on the comparatively safe photograph!</div>
+    
+    <div class="image-container">
+        <img id="image1" src="" alt="Image 1" onclick="handleImageClick(this)">
+        <img id="image2" src="" alt="Image 2" onclick="handleImageClick(this)">
+    </div>
+
+    <div id="selectedGenderMessage" style="display: none; text-align: center;">Selected gender is: <span id="selectedGender"></span>
+  </div>
+
+    <div class="form-container">
+        <div class="form-item">
+          <label for="age">Please select your age (optional):</label>
+          <select id="age" name="age">
+            <option value="" selected disabled>Select Age</option>
+            <option value="u15">Under 15</option>
+            <option value="16-24">16-24</option>
+            <option value="25-60">25-60</option>
+            <option value="a60">Above 60</option>
+          </select>
+        </div>
+
+        <div class="form-item">
+          <label for="income">Please select your monthly income (optional):</label>
+          <select id="income" name="income">
+            <option value="" selected disabled>Select Income</option>
+            <option value="u10">Under 10 thousand</option>
+            <option value="10-40">10 - 40 thousand</option>
+            <option value="40-100">40 thousand - 1 lakh</option>
+            <option value="a100">Above 1 lakh</option>
+            <option value="na">Prefer not to share</option>
+          </select>
+        </div>
+    </div>
+
+    <div id="myModal" class="modal">
+    <div class="modal-content">
+      <div id="mainQuestion" style="line-height: 100%; margin-top: 25px; margin-bottom: 25px;">Please select your gender:</div>
+      <div class="row">
+        <button id="modalButton" style="margin: 5px;" onclick="saveGender('Female')">Female</button>
+        <button id="modalButton" style="margin: 5px;" onclick="saveGender('Male')">Male</button>
+        <button id="modalButton" style="margin: 5px;" onclick="saveGender('Non-binary')">Non-binary</button>
+      </div>
+      <div id="mainInstruction" style="transform: none; margin-top: 25px; margin-bottom: 25px;">We need this information to understand the gender-specific sensitivity of safety perception of cities.</div>
+    </div>
+  </div>
+
+
+    <div id="footerText">Developed by Joy Mondal<br>Research work supported by Design X Design - Sanskriti Fellowship</div>
+    
+    <script>
+        // Array of image URLs
+        var imageUrls = [
+            "https://i0.wp.com/www.tusktravel.com/blog/wp-content/uploads/2019/11/Old-Streets-in-Delhi.jpg?fit=800%2C600&ssl=1",
+            "https://images.unsplash.com/photo-1583608562859-e2e16f028d73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZGVsaGklMjBzdHJlZXR8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+            "https://img.etimg.com/thumb/msid-81947801,width-640,resizemode-4,imgsize-74580/empty-delhi-street.jpg",
+            "https://d3lzcn6mbbadaf.cloudfront.net/media/details/WhatsApp_Image_2020-04-24_at_1.23.24_PM.jpg",
+            "https://upload.wikimedia.org/wikipedia/commons/a/af/Delhi-Street_view.JPG",
+            "https://www.india.com/wp-content/uploads/2022/01/22b51649fc8365d6b7ae5113f49da83e.jpg",
+            "https://images.indianexpress.com/2023/01/CityDark-6col.jpg"
+// Add more image URLs here
+        ];
+
+        function randomizeImages() {
+            // Get random image URLs
+            var randomIndex1 = Math.floor(Math.random() * imageUrls.length);
+            var randomIndex2 = Math.floor(Math.random() * imageUrls.length);
+
+           // Make sure the two random indexes are not the same
+            while (randomIndex1 === randomIndex2) {
+                randomIndex2 = Math.floor(Math.random() * imageUrls.length);
+            }
+            
+
+            // Set the source of the first image
+            var image1 = document.getElementById("image1");
+            image1.src = imageUrls[randomIndex1];
+            image1.classList.remove("clicked"); // Remove any existing border class
+            
+
+            // Set the source of the second image
+            var image2 = document.getElementById("image2");
+            image2.src = imageUrls[randomIndex2];
+            image2.classList.remove("clicked"); // Remove any existing border class
+
+            // Wait for the images to load and then update their widths
+            document.getElementById("image1").onload = function() {
+                document.getElementById("image2").onload = function() {
+                    updateImageWidths();
+                };
+            };
+
+        }
+
+            function updateImageWidths() {
+            // Get screen width
+            var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            screenWidth = 0.9 * screenWidth  
+
+            // Get original dimensions of the images
+            var image1 = document.getElementById("image1");
+            var image2 = document.getElementById("image2");
+
+            var originalWidth1 = image1.naturalWidth;
+            var originalHeight1 = image1.naturalHeight;
+            var originalWidth2 = image2.naturalWidth;
+            var originalHeight2 = image2.naturalHeight;
+
+            // Calculate new widths
+            var newWidth1 = screenWidth / (1 + ((originalHeight1 * originalWidth2) / (originalWidth1 * originalHeight2)));
+            var newWidth2 = screenWidth - newWidth1;
+
+                        // Update image widths
+            if (screenWidth < 750) {
+                image1.style.width = "80%";
+                image2.style.width = "80%";
+                image1.style.maxHeight = "40vh";
+                image2.style.maxHeight = "40vh";
+                } 
+            else {
+                image1.style.width = newWidth1 + "px";
+                image2.style.width = newWidth2 + "px";
+                }
+            }
+        
+        function handleImageClick(image) {
+
+
+            /*var ageDropdown = document.getElementById("age");
+            var incomeDropdown = document.getElementById("income");
+            var genderDropdown = document.getElementById("gender");
+
+            var selectedAge = ageDropdown.value;
+            var selectedIncome = incomeDropdown.value;
+            var selectedGender = genderDropdown.value;
+
+            var missingAnswers = [];
+
+            if (!selectedAge) {
+                missingAnswers.push("age");
+            }
+
+            if (!selectedIncome) {
+                missingAnswers.push("income");
+            }
+
+            if (!selectedGender) {
+                missingAnswers.push("gender");
+            }
+
+            // Check if any dropdowns are unanswered
+            if (missingAnswers.length > 0) {
+                var modalText = "Please tell us your " + missingAnswers.join(", ") + " using the dropdown questions placed below the photographs";
+                openModal(modalText);
+                return;
+            }*/
+
+            // Remove the border class from both images
+            var image1 = document.getElementById("image1");
+            image1.classList.remove("clicked");
+            var image2 = document.getElementById("image2");
+            image2.classList.remove("clicked");
+
+            // Add the border class to the clicked image
+            image.classList.add("clicked");
+
+            // Wait for 1 second and then randomize images again
+            setTimeout(randomizeImages, 500);
+
+            // Wait for the images to load and then update their widths
+            document.getElementById("image1").onload = function() {
+                document.getElementById("image2").onload = function() {
+                    updateImageWidths();
+                };
+            };
+        }
+
+        
+        /*var selectedGenderMessage = document.getElementById("selectedGenderMessage");
+        var selectedGenderText = document.getElementById("selectedGender");*/
+
+        function saveGender(gender) {
+            // Store the selected gender in a variable or use it as needed
+            var modal = document.getElementById("myModal");
+            var selectedGenderMessage = document.getElementById("selectedGenderMessage");
+            var selectedGenderText = document.getElementById("selectedGender");
+
+            // Store the selected gender in a variable or use it as needed
+              console.log("Selected gender:", gender);
+              selectedGenderText.textContent = gender;
+
+              // Display the selected gender message
+      selectedGenderMessage.style.display = "block";
+
+            // Close the modal box
+            modal.style.display = "none";
+        }
+
+
+
+
+       /* function openModal(text) {
+
+            var modal = document.getElementById("modalBox");
+            var modalText = document.getElementById("modalText");
+            var modalButton = document.getElementById("modalButton");
+            var modalButtonwhy = document.getElementById("modalButtonwhy");
+
+            modalText.textContent = text;
+            modal.style.display = "block";
+            modalButtonwhy.style.display = "inline-block";
+
+            modalButton.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            modalButtonwhy.onclick = function() {
+                modalText.textContent = "It will help us in understanding how safety perception of cities changes with difference in gender, age, and income!";
+                modalButtonwhy.style.display = "none";
+            }
+        }*/
+
+        window.onload = updateImageWidths;
+        window.addEventListener('resize', updateImageWidths);
+
+
+        // Randomize images on page load
+        randomizeImages();
+
+    </script>
+</body>
+</html>
